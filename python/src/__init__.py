@@ -1,7 +1,10 @@
 from typing import List
 
 from .temporada import Temporada
+from .scraper import Scraper
 
-def crearTemporadas(ano:int)->List[Temporada]:
+def crearScraper(ano:int)->Scraper:
 
-	return Temporada.generarTemporadas(ano)
+	temporada=Temporada(ano)
+
+	return Scraper(temporada.temporada)

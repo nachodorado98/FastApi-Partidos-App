@@ -1,5 +1,7 @@
-from src import crearTemporadas
+from src import crearScraper
 
-temporadas=crearTemporadas(2023)
+scraper=crearScraper(1990)
 
-print(temporadas)
+partidos=scraper.obtenerPartidos()
+
+print(partidos)
