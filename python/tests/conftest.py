@@ -6,6 +6,7 @@ import pytest
 
 from src.temporada import Temporada
 from src.scraper import Scraper
+from src.etl import ETL
 
 @pytest.fixture
 def temporada():
@@ -16,3 +17,8 @@ def temporada():
 def scraper():
 
 	return Scraper("2019-2020")
+
+@pytest.fixture
+def etl():
+
+	return ETL(2023)

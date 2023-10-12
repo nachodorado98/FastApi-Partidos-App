@@ -19,6 +19,8 @@ class Scraper:
 		peticion=requests.get(self.url)
 
 		if peticion.status_code!=200:
+
+			print(peticion.status_code)
 			
 			raise PaginaError()
 

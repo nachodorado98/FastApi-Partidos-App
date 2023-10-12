@@ -1,10 +1,5 @@
-from typing import List
+from .etl import ETL
 
-from .temporada import Temporada
-from .scraper import Scraper
+def crearETL(ano:int)->ETL:
 
-def crearScraper(ano:int)->Scraper:
-
-	temporada=Temporada(ano)
-
-	return Scraper(temporada.temporada)
+	return ETL(ano)

@@ -1,7 +1,9 @@
-from src import crearScraper
+from src import crearETL
 
-scraper=crearScraper(1990)
+etl=crearETL(2019)
 
-partidos=scraper.obtenerPartidos()
+etl.extraer()
 
-print(partidos)
+etl.limpiar()
+
+etl.almacenar()
