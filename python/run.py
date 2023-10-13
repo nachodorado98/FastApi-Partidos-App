@@ -1,9 +1,3 @@
-from src import crearETL
+from src import main
 
-etl=crearETL(2019)
-
-etl.extraer()
-
-etl.limpiar()
-
-etl.almacenar()
+main()

@@ -20,7 +20,7 @@ class Scraper:
 
 		if peticion.status_code!=200:
 
-			print(peticion.status_code)
+			print(f"Codigo de estado de la peticion: {peticion.status_code}")
 			
 			raise PaginaError()
 

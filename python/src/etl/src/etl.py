@@ -6,6 +6,7 @@ from .scraper import Scraper
 from .temporada import Temporada
 from .excepciones import LimpiarError, AlmacenarError
 from .config import COMPETICIONES, RONDAS, LUGARES, RESULTADOS
+from .database.conexion import Conexion
 
 class ETL:
 
@@ -17,12 +18,12 @@ class ETL:
 		self.tabla_limpia=None
 
 	# Metodo para extraer los partidos
-	def extraer(self)->None:
+	def __extraer(self)->None:
 
 		self.tabla_cruda=self.scraper.obtenerPartidos()
 
 	# Metodo para limpiar los partidos
-	def limpiar(self)->None:
+	def __limpiar(self)->None:
 
 		if self.tabla_cruda is None:
 
@@ -72,7 +73,7 @@ class ETL:
 		# Funcion para limpiar el equipo de la champions (eliminar abreviatura pais)
 		def limpiarEquipoChampions(serie:pd.Series)->pd.Series:
 			
-			if serie["Competicion"] in ["Champions League", "Europa League"]:
+			if serie["Competicion"] in ["Champions League", "Europa League", "Supercopa de Europa"]:
 				
 				equipo_dividio=serie["Rival"].split(" ")[1:]
 				
@@ -107,7 +108,7 @@ class ETL:
 										"Resultado", "Posesion", "Publico", "Capitan", "Arbitro"]]
 
 	# Metodo para almacenar los partidos
-	def almacenar(self)->None:
+	def __almacenar(self)->None:
 
 		if self.tabla_limpia is None:
 
@@ -115,4 +116,21 @@ class ETL:
 
 		df_final=self.tabla_limpia.copy()
 
-		df_final.to_csv(f"Partidos_ATM_{self.temporada.temporada.replace('-','_')}.csv", index=False)
+		partidos=df_final.values.tolist()
+
+		conexion=Conexion()
+
+		for partido in partidos:
+
+			conexion.insertarPartido(partido)
+
+		conexion.cerrarConexion()
+
+	# Metodo para realizar la pipeline de la ETL
+	def pipelineETL(self)->None:
+
+		self.__extraer()
+
+		self.__limpiar()
+
+		self.__almacenar()
