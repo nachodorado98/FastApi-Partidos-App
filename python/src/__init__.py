@@ -1,3 +1,8 @@
+from fastapi import FastAPI
+
+from .metadata.confmetadata import *
+from .routers.inicio import router_inicio
+
 from .etl.src import ETLtemporada, ETLdesde
 from .etl.src.database.conexion import Conexion
 from .etl.src.temporada import Temporada
@@ -31,6 +36,17 @@ def obtenerData()->None:
 
 	con.cerrarConexion()
 
-def main()->None:
+# Funcion para crear la app
+def crearApp():
 
 	obtenerData()
+
+	app=FastAPI(title=TITULO,
+				description=DESCRIPCION,
+				version=VERSION,
+				contact=CONTACTO,
+				license_info=LICENCIA)
+
+	app.include_router(router_inicio)
+
+	return app
