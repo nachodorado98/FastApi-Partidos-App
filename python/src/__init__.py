@@ -1,29 +1,36 @@
-import datetime
-import time
+from .etl.src import ETLtemporada, ETLdesde
+from .etl.src.database.conexion import Conexion
+from .etl.src.temporada import Temporada
 
-from .etl.src import crearETL
-from .etl.src.excepciones import PaginaError, TablaError
+# Funcion para obtener la data de los partidos
+def obtenerData()->None:
 
-def main():
+	con=Conexion()
 
-	anno_actual=datetime.datetime.now().year
+	if con.tabla_vacia():
 
-	for anno in range(1988, anno_actual+1):
+		print("Obtencion total de los datos")
+		
+		ETLdesde()
 
-		etl=crearETL(anno)
+	else:
 
-		print(etl.temporada)
+		fecha_mas_reciente=con.fecha_mas_reciente()
 
-		try:
+		temporada=Temporada.desde_fecha(fecha_mas_reciente)
 
-			etl.pipelineETL()
+		if Temporada.es_temporada_actual(fecha_mas_reciente):
 
-		except PaginaError:
+			print("Obtencion de los datos de la temporada actual")
 
-			print("Error en la pagina")
+		else:
 
-		except TablaError:
+			print(f"Obtencion de los datos desde la temporada {temporada}")
+	
+		ETLdesde(temporada.ano1)
 
-			print("Error en la tabla")
+	con.cerrarConexion()
 
-		time.sleep(5)
+def main()->None:
+
+	obtenerData()

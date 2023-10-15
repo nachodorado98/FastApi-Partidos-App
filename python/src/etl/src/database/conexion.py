@@ -26,6 +26,11 @@ class Conexion:
 		self.c.close()
 		self.bbdd.close()
 
+	# Metodo para confirmar una accion
+	def confirmar(self)->None:
+
+		self.bbdd.commit()
+
 	# Metodo para insertar un partido
 	def insertarPartido(self, partido:List)->None:
 
@@ -34,4 +39,22 @@ class Conexion:
 							VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
 							tuple(partido))
 
-		self.bbdd.commit()
+		self.confirmar()
+
+	# Metodo para saber si la tabla esta vacia
+	def tabla_vacia(self)->bool:
+
+		self.c.execute("""SELECT *
+							FROM partidos""")
+
+		partidos=self.c.fetchall()
+
+		return True if partidos==[] else False
+
+	# Metodo para obtener la fecha mas reciente
+	def fecha_mas_reciente(self)->Optional[datetime.datetime]:
+
+		self.c.execute("""SELECT MAX(fecha) AS fecha_mas_reciente
+							FROM partidos""")
+
+		return self.c.fetchone()["fecha_mas_reciente"]

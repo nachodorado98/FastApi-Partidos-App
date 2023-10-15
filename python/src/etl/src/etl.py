@@ -1,6 +1,7 @@
 import pandas as pd
 import warnings
 warnings.filterwarnings("ignore")
+from typing import Optional
 
 from .scraper import Scraper
 from .temporada import Temporada
@@ -107,6 +108,11 @@ class ETL:
 		self.tabla_limpia=df_jugados[["Fecha", "Hora", "Competicion", "Ronda", "Lugar", "Rival", "Marcador",
 										"Resultado", "Posesion", "Publico", "Capitan", "Arbitro"]]
 
+	# Metodo para filtrar los partidos segun la ultima fecha
+	def __filtrar(self, df:pd.DataFrame, fecha:Optional[str])->pd.DataFrame:
+
+		return df if fecha is None else df[df["Fecha"]>fecha.strftime("%Y-%m-%d")]
+
 	# Metodo para almacenar los partidos
 	def __almacenar(self)->None:
 
@@ -114,15 +120,25 @@ class ETL:
 
 			raise AlmacenarError()
 
-		df_final=self.tabla_limpia.copy()
-
-		partidos=df_final.values.tolist()
+		df=self.tabla_limpia.copy()
 
 		conexion=Conexion()
 
-		for partido in partidos:
+		fecha_ultima=conexion.fecha_mas_reciente()
 
-			conexion.insertarPartido(partido)
+		df_filtrado=self.__filtrar(df, fecha_ultima)
+
+		partidos=df_filtrado.values.tolist()
+
+		if partidos==[]:
+
+			print("Actualizado")
+
+		else:
+
+			for partido in partidos:
+
+				conexion.insertarPartido(partido)
 
 		conexion.cerrarConexion()
 

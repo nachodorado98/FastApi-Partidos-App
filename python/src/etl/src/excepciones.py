@@ -21,3 +21,9 @@ class AlmacenarError(Exception):
 	def __init__(self)->None:
 
 		super().__init__("No hay tabla limpia para almacenar")
+
+class TemporadaError(Exception):
+
+	def __init__(self, anno:int)->None:
+
+		super().__init__(f"Error en el año inicial {anno}")
