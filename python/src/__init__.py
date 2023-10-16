@@ -1,7 +1,9 @@
 from fastapi import FastAPI
+import time
 
 from .metadata.confmetadata import *
 from .routers.inicio import router_inicio
+from .routers.partidos import router_partidos
 
 from .etl.src import ETLtemporada, ETLdesde
 from .etl.src.database.conexion import Conexion
@@ -36,10 +38,25 @@ def obtenerData()->None:
 
 	con.cerrarConexion()
 
+# Funcion para conectarte y obtener la data
+def conectarObtenerData()->None:
+
+	try:
+
+		obtenerData()
+
+	except AttributeError as e:
+
+		print("Reconectando...")
+
+		time.sleep(5)
+
+		conectarObtenerData()
+
 # Funcion para crear la app
 def crearApp():
 
-	obtenerData()
+	conectarObtenerData()
 
 	app=FastAPI(title=TITULO,
 				description=DESCRIPCION,
@@ -48,5 +65,6 @@ def crearApp():
 				license_info=LICENCIA)
 
 	app.include_router(router_inicio)
+	app.include_router(router_partidos)
 
 	return app

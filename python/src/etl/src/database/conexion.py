@@ -18,7 +18,6 @@ class Conexion:
 		except psycopg2.OperationalError as e:
 
 			print("Error en la conexion a la BBDD")
-			print(e)
 
 	# Metodo para cerrar la conexion a la BBDD
 	def cerrarConexion(self)->None:
@@ -58,3 +57,23 @@ class Conexion:
 							FROM partidos""")
 
 		return self.c.fetchone()["fecha_mas_reciente"]
+
+	# Metodo para obtener los partidos
+	def obtenerPartidos(self)->List[Dict]:
+
+		self.c.execute("""SELECT *
+							FROM partidos
+							ORDER BY fecha DESC""")
+
+		return self.c.fetchall()
+
+	# Metodo para obtener los partidos con limite y salto
+	def obtenerPartidosRango(self, limite:int, saltar:int)->List[Dict]:
+
+		self.c.execute(f"""SELECT *
+							FROM partidos
+							ORDER BY fecha DESC
+							LIMIT {limite}
+							OFFSET {saltar}""")
+
+		return self.c.fetchall()
