@@ -9,6 +9,7 @@ def test_conexion(conexion):
 	tablas=[tabla["relname"] for tabla in conexion.c.fetchall()]
 
 	assert "partidos" in tablas
+	assert "usuarios" in tablas
 
 def test_cerrar_conexion(conexion):
 
@@ -21,5 +22,11 @@ def test_cerrar_conexion(conexion):
 def test_tabla_partidos_vacia(conexion):
 
 	conexion.c.execute("SELECT * FROM partidos")
+
+	assert conexion.c.fetchall()==[]
+
+def test_tabla_usuarios_vacia(conexion):
+
+	conexion.c.execute("SELECT * FROM usuarios")
 
 	assert conexion.c.fetchall()==[]

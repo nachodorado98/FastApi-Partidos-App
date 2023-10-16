@@ -11,7 +11,13 @@ from src import crearApp
 @pytest.fixture
 def conexion_simple():
 
-	yield Conexion()
+	conexion=Conexion()
+
+	conexion.c.execute("DELETE FROM usuarios")
+
+	conexion.bbdd.commit()
+
+	yield conexion
 
 @pytest.fixture
 def conexion(conexion_simple):

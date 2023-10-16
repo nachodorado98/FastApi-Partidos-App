@@ -4,6 +4,7 @@ import time
 from .metadata.confmetadata import *
 from .routers.inicio import router_inicio
 from .routers.partidos import router_partidos
+from .routers.usuarios import router_usuarios
 
 from .etl.src import ETLtemporada, ETLdesde
 from .etl.src.database.conexion import Conexion
@@ -66,5 +67,6 @@ def crearApp():
 
 	app.include_router(router_inicio)
 	app.include_router(router_partidos)
+	app.include_router(router_usuarios)
 
 	return app

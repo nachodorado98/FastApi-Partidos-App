@@ -31,6 +31,8 @@ def conexion():
 
 	con.c.execute("DELETE FROM partidos")
 
+	con.c.execute("DELETE FROM usuarios")
+
 	con.bbdd.commit()
 
 	return con

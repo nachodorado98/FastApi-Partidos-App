@@ -15,3 +15,8 @@ CREATE TABLE partidos (id SERIAL PRIMARY KEY,
 						publico INT,
 						capitan VARCHAR(50),
 						arbitro VARCHAR(50));
+
+CREATE TABLE usuarios (usuario VARCHAR(20) PRIMARY KEY,
+						nombre VARCHAR(20),
+						contrasena VARCHAR(70),
+						numero_partidos INT DEFAULT 0);

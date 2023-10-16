@@ -77,3 +77,32 @@ class Conexion:
 							OFFSET {saltar}""")
 
 		return self.c.fetchall()
+
+	# Metodo para insertar un usuario
+	def insertarUsuario(self, usuario:str, nombre:str, contrasena:str)->None:
+
+		self.c.execute("""INSERT INTO usuarios (usuario, nombre, contrasena)
+							VALUES(%s, %s, %s)""",
+							(usuario, nombre, contrasena))
+
+		self.bbdd.commit()
+
+	# Metodo para comprobar que un usuario existe
+	def existe_usuario(self, usuario:str)->bool:
+
+		self.c.execute("""SELECT *
+							FROM usuarios
+							WHERE usuario=%s""",
+							(usuario,))
+
+		return False if self.c.fetchone() is None else True
+
+	# Metodo para obtener los usuarios
+	def obtenerUsuarios(self)->Optional[List[Dict]]:
+
+		self.c.execute("""SELECT usuario
+							FROM usuarios""")
+
+		usuarios=self.c.fetchall()
+
+		return None if usuarios==[] else usuarios
