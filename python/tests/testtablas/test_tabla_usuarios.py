@@ -1,3 +1,5 @@
+import pytest
+
 def test_insertar_usuario(conexion_simple):
 
 	conexion_simple.insertarUsuario("nacho98", "nacho", "1234")
@@ -47,3 +49,20 @@ def test_obtener_usuarios_existen(conexion_simple):
 	for usuario in usuarios:
 
 		assert "usuario" in usuario
+
+def test_obtener_contrasena_usuario_no_existe(conexion_simple):
+
+	assert conexion_simple.obtenerContrasena("nacho98") is None
+
+@pytest.mark.parametrize(["usuario"],
+	[("nacho98",),("nacho99",),("nacho989",)]
+)
+def test_obtener_contrasena_usuario_existe(conexion_simple, usuario):
+
+	conexion_simple.insertarUsuario("nacho98", "nacho", "1234")
+	conexion_simple.insertarUsuario("nacho99", "nacho", "1234")
+	conexion_simple.insertarUsuario("nacho989", "nacho", "1234")
+
+	contrasena=conexion_simple.obtenerContrasena(usuario)
+
+	assert contrasena=="1234"

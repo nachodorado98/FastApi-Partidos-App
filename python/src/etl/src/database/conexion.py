@@ -106,3 +106,15 @@ class Conexion:
 		usuarios=self.c.fetchall()
 
 		return None if usuarios==[] else usuarios
+
+	# Metodo para obtener la contraseña (hash) del usuario
+	def obtenerContrasena(self, usuario:str)->Optional[str]:
+
+		self.c.execute("""SELECT contrasena
+							FROM usuarios
+							WHERE usuario=%s""",
+							(usuario,))
+
+		contrasena=self.c.fetchone()
+
+		return contrasena["contrasena"] if contrasena is not None else contrasena
