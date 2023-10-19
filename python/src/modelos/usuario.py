@@ -24,3 +24,7 @@ class UsuarioBBDD(Usuario):
 		json_schema_extra={"example":{"usuario":"nacho98",
 										"nombre":"Nacho",
 										"contrasena":"123456789"}}
+
+class UsuarioPerfil(Usuario):
+
+	numero_partidos:int

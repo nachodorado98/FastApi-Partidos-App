@@ -66,3 +66,18 @@ def test_obtener_contrasena_usuario_existe(conexion_simple, usuario):
 	contrasena=conexion_simple.obtenerContrasena(usuario)
 
 	assert contrasena=="1234"
+
+def test_obtener_datos_usuario_no_existe(conexion_simple):
+
+	assert conexion_simple.obtenerDatosUsuario("nacho98") is None
+
+def test_obtener_datos_usuario_existe(conexion_simple):
+
+	conexion_simple.insertarUsuario("nacho98", "nacho", "1234")
+
+	datos=conexion_simple.obtenerDatosUsuario("nacho98")
+
+	assert datos["usuario"]=="nacho98"
+	assert datos["nombre"]=="nacho"
+	assert datos["numero_partidos"]==0
+	assert "contrasena" not in datos

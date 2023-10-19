@@ -4,9 +4,13 @@ from typing import List, Dict
 from src.etl.src.database.conexion import Conexion
 from src.etl.src.database.sesion import crearSesion
 
-from src.modelos.usuario import UsuarioBBDD
+from src.modelos.usuario import UsuarioBBDD, UsuarioPerfil
+from src.modelos.usuario_utils import obtenerObjetoUsuarioPerfil
+from src.modelos.token import Payload
 
 from src.utilidades.utils import generarHash
+
+from src.autenticacion.auth_utils import decodificarToken
 
 router_usuarios=APIRouter(prefix="/usuarios", tags=["Usuarios"])
 
@@ -71,3 +75,26 @@ async def obtenerUsuarios(con:Conexion=Depends(crearSesion))->List[Dict]:
 		raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Usuarios no existentes")
 
 	return usuarios
+
+@router_usuarios.get("/me", status_code=status.HTTP_200_OK, summary="Devuelve los datos del usuario")
+async def obtenerPerfil(payload:Payload=Depends(decodificarToken), con:Conexion=Depends(crearSesion))->UsuarioPerfil:
+
+	"""
+	Devuelve el diccionario de los datos del usuario.
+
+	## Respuesta
+
+	200 (OK): Si se obtienen los datos del usuario correctamente
+
+	- **Usuario**: El nombre de usuario del usuario (str).
+	- **Nombre**: El nombre del usuario (str).
+	- **Numero_partidos**: El numero de partidos del usuario (int).
+
+	401 (UNAUTHORIZED): Si los datos no son correctos
+
+	- **Mensaje**: El mensaje de la excepcion (str).
+	"""
+
+	datos_usuario=con.obtenerDatosUsuario(payload.sub)
+
+	return obtenerObjetoUsuarioPerfil(datos_usuario)

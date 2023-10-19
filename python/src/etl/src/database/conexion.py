@@ -118,3 +118,13 @@ class Conexion:
 		contrasena=self.c.fetchone()
 
 		return contrasena["contrasena"] if contrasena is not None else contrasena
+
+	# Metodo para obtener los datos de un usuario
+	def obtenerDatosUsuario(self, usuario:str)->Optional[Dict]:
+
+		self.c.execute("""SELECT usuario, nombre, numero_partidos
+						FROM usuarios
+						WHERE usuario=%s""",
+						(usuario,))
+
+		return self.c.fetchone()
