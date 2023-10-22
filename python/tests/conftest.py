@@ -15,6 +15,8 @@ def conexion_simple():
 
 	conexion.c.execute("DELETE FROM usuarios")
 
+	conexion.c.execute("DELETE FROM asistidos")
+
 	conexion.bbdd.commit()
 
 	yield conexion
@@ -39,3 +41,16 @@ def app():
 def cliente(app):
 
 	return TestClient(app)
+
+@pytest.fixture()
+def header_autorizado(cliente, conexion_simple):
+
+	cliente.post("/usuarios", json={"usuario":"nacho98","nombre":"Nacho", "contrasena":"987654321"})
+
+	datos_form={"grant_type": "password", "username": "nacho98", "password": "987654321", "scope": "", "client_id": "", "client_secret": ""}
+
+	contenido_token=cliente.post("/tokens", data=datos_form).json()
+
+	token=contenido_token["access_token"]
+
+	return {"Authorization": f"Bearer {token}"}

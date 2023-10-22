@@ -10,6 +10,7 @@ def test_conexion(conexion):
 
 	assert "partidos" in tablas
 	assert "usuarios" in tablas
+	assert "asistidos" in tablas
 
 def test_cerrar_conexion(conexion):
 
@@ -28,5 +29,11 @@ def test_tabla_partidos_vacia(conexion):
 def test_tabla_usuarios_vacia(conexion):
 
 	conexion.c.execute("SELECT * FROM usuarios")
+
+	assert conexion.c.fetchall()==[]
+
+def test_tabla_asistidos_vacia(conexion):
+
+	conexion.c.execute("SELECT * FROM asistidos")
 
 	assert conexion.c.fetchall()==[]

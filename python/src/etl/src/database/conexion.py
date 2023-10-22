@@ -123,8 +123,23 @@ class Conexion:
 	def obtenerDatosUsuario(self, usuario:str)->Optional[Dict]:
 
 		self.c.execute("""SELECT usuario, nombre, numero_partidos
-						FROM usuarios
-						WHERE usuario=%s""",
-						(usuario,))
+							FROM usuarios
+							WHERE usuario=%s""",
+							(usuario,))
 
 		return self.c.fetchone()
+
+	# Metodo para obtener los partidos asistidos de un usuario
+	def obtenerAsistidos(self, usuario:str)->Optional[List[Dict]]:
+
+		self.c.execute("""SELECT a.asistido, p.fecha, p.competicion, p.rival, p.marcador, p.resultado, p.lugar
+							FROM partidos p
+							JOIN asistidos a
+							USING (id)
+							WHERE a.usuario=%s
+							ORDER BY p.fecha DESC""",
+							(usuario,))
+
+		asistidos=self.c.fetchall()
+
+		return None if asistidos==[] else asistidos

@@ -20,3 +20,10 @@ CREATE TABLE usuarios (usuario VARCHAR(20) PRIMARY KEY,
 						nombre VARCHAR(20),
 						contrasena VARCHAR(70),
 						numero_partidos INT DEFAULT 0);
+
+CREATE TABLE asistidos (asistido VARCHAR(32) PRIMARY KEY,
+						id INT,
+						usuario VARCHAR(20),
+						comentarios VARCHAR(100),
+						FOREIGN KEY (id) REFERENCES partidos(id) ON DELETE CASCADE,
+						FOREIGN KEY (usuario) REFERENCES usuarios(usuario) ON DELETE CASCADE);

@@ -6,6 +6,7 @@ from .routers.inicio import router_inicio
 from .routers.partidos import router_partidos
 from .routers.usuarios import router_usuarios
 from .autenticacion.auth import router_auth
+from .routers.asistidos import router_asistidos
 
 from .etl.src import ETLtemporada, ETLdesde
 from .etl.src.database.conexion import Conexion
@@ -70,5 +71,6 @@ def crearApp():
 	app.include_router(router_partidos)
 	app.include_router(router_usuarios)
 	app.include_router(router_auth)
+	app.include_router(router_asistidos)
 
 	return app
