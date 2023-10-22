@@ -24,3 +24,13 @@ def test_obtener_partidos_rango(conexion_simple, limite, saltar):
 	for partido in partidos[:saltar]:
 
 		assert partido not in partidos_rango
+
+def test_partido_no_existe(conexion_simple):
+
+	assert not conexion_simple.existe_partido(0)
+
+def test_partido_existe(conexion_simple):
+
+	id_partido=conexion_simple.obtenerPartidos()[-1]["id"]
+
+	assert conexion_simple.existe_partido(id_partido)

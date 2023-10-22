@@ -132,7 +132,7 @@ class Conexion:
 	# Metodo para obtener los partidos asistidos de un usuario
 	def obtenerAsistidos(self, usuario:str)->Optional[List[Dict]]:
 
-		self.c.execute("""SELECT a.asistido, p.fecha, p.competicion, p.rival, p.marcador, p.resultado, p.lugar
+		self.c.execute("""SELECT a.asistido, p.fecha, p.competicion, p.rival, p.marcador, p.resultado, p.lugar, a.comentarios
 							FROM partidos p
 							JOIN asistidos a
 							USING (id)
@@ -143,3 +143,57 @@ class Conexion:
 		asistidos=self.c.fetchall()
 
 		return None if asistidos==[] else asistidos
+
+	# Metodo para comprobar que un partido existe
+	def existe_partido(self, id_partido:int)->bool:
+
+		self.c.execute("""SELECT *
+							FROM partidos
+							WHERE id=%s""",
+							(id_partido,))
+
+		return False if self.c.fetchone() is None else True
+
+	# Metodo para comprobar que un partido asistido ya existe
+	def existe_asistido(self, id_partido:int, usuario:str)->bool:
+
+		self.c.execute("""SELECT *
+							FROM asistidos
+							WHERE id=%s
+							AND usuario=%s""",
+							(id_partido,usuario))
+
+		return False if self.c.fetchone() is None else True
+
+	# Metodo para insertar un partido asistido
+	def insertarAsistido(self, asistido:str, partido:int, usuario:str, comentarios:str)->None:
+
+		self.c.execute("""INSERT INTO asistidos
+							VALUES(%s, %s, %s, %s)""",
+							(asistido, partido, usuario, comentarios))
+
+		self.bbdd.commit()
+
+	# Metodo para obtener el numero de partidos del usuario
+	def obtenerNumeroPartidos(self, usuario:str)->Optional[int]:
+
+		self.c.execute("""SELECT numero_partidos
+							FROM usuarios
+							WHERE usuario=%s""",
+							(usuario,))
+
+		numero_partidos=self.c.fetchone()
+
+		return None if numero_partidos is None else numero_partidos["numero_partidos"]
+
+	# Metodo para aumentar un partido asistido
+	def aumentarAsistido(self, usuario:str)->None:
+
+		numero_partidos=self.obtenerNumeroPartidos(usuario)
+
+		self.c.execute("""UPDATE usuarios
+							SET numero_partidos=%s
+							WHERE usuario=%s""",
+							(numero_partidos+1, usuario))
+
+		self.bbdd.commit()

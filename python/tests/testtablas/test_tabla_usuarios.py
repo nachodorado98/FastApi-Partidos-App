@@ -81,3 +81,35 @@ def test_obtener_datos_usuario_existe(conexion_simple):
 	assert datos["nombre"]=="nacho"
 	assert datos["numero_partidos"]==0
 	assert "contrasena" not in datos
+
+def test_obtener_numeros_partidos_no_existe(conexion_simple):
+
+	assert conexion_simple.obtenerNumeroPartidos("nacho98") is None
+
+def test_obtener_numeros_partidos_existe(conexion_simple):
+
+	conexion_simple.insertarUsuario("nacho98", "nacho", "1234")
+
+	assert conexion_simple.obtenerNumeroPartidos("nacho98")==0
+
+def test_aumentar_numeros_partidos(conexion_simple):
+
+	conexion_simple.insertarUsuario("nacho98", "nacho", "1234")
+
+	assert conexion_simple.obtenerNumeroPartidos("nacho98")==0
+
+	conexion_simple.aumentarAsistido("nacho98")
+
+	assert conexion_simple.obtenerNumeroPartidos("nacho98")==1
+
+def test_aumentar_numeros_partidos_varias_veces(conexion_simple):
+
+	conexion_simple.insertarUsuario("nacho98", "nacho", "1234")
+
+	assert conexion_simple.obtenerNumeroPartidos("nacho98")==0
+
+	for _ in range(5):
+
+		conexion_simple.aumentarAsistido("nacho98")
+
+	assert conexion_simple.obtenerNumeroPartidos("nacho98")==5	
